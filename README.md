@@ -55,6 +55,12 @@ Seneca has a common caching API with the following actions:
 
 All caching plugins, including this one, implement this action API.
 
+## Extended API
+
+To access the underlying [redis](https://github.com/mranney/node_redis), use the action `plugin: 'redis-cache', cmd: 'native'`.
+
+The plugin also registers with the action `role: 'seneca', cmd: 'close'`. This sends the `QUIT` command to the redis connection when you call the `seneca.close` method.
+
 ### Options
 
 You can use any of the options from the node [redis](https://github.com/mranney/node_redis#rediscreateclientport-host-options) module directly as options to this plugin.

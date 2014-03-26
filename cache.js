@@ -86,7 +86,7 @@ module.exports = function(options, register) {
   seneca.add({role: role, cmd: 'incr'}, cmds.incr);
   seneca.add({role: role, cmd: 'decr'}, cmds.decr);
 
-  seneca.add({role:'seneca', cmd:'close'}, function(args, cb) {
+  seneca.add({role: 'seneca', cmd: 'close'}, function(args, cb) {
     cache.quit(cb);
   });
 
