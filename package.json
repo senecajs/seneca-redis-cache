@@ -1,0 +1,31 @@
+{
+  "name": "seneca-redis-cache",
+  "version": "0.0.1",
+  "description": "Redis caching plugin for seneca",
+  "main": "cache.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darsee/seneca-redis-cache.git"
+  },
+  "keywords": [
+    "seneca",
+    "cache",
+    "redis",
+    "plugin"
+  ],
+  "contributors": [
+    "Seamus D'Arcy",
+    "Richard Rodger (http://richardrodger.com/)"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "redis": "^0.10.1"
+  },
+  "devDependencies": {
+    "seneca": "^0.5.15",
+    "mocha": "^1.18.2"
+  }
+}
