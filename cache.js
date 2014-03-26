@@ -86,6 +86,10 @@ module.exports = function(options, register) {
   seneca.add({role: role, cmd: 'incr'}, cmds.incr);
   seneca.add({role: role, cmd: 'decr'}, cmds.decr);
 
+  seneca.add({role:'seneca', cmd:'close'}, function(args, cb) {
+    cache.quit(cb);
+  });
+
   seneca.add({init: name}, function(args, done) {
     cache = redis.createClient(options.redis.port, options.redis.host, options.redis);
     cache.on('connect', function() {
