@@ -23,14 +23,14 @@ module.exports = function(options, register) {
     var key = args.key;
     var val = args.val;
     cache.set(key, val, function(err, reply) {
-      cb(err, {key: key});
+      cb(err, key);
     });
   };
 
   cmds.get = function(args, cb) {
     var key = args.key;
     var val = cache.get(key, function(err, val) {
-      cb(err, {val: val});
+      cb(err, val);
     });
   };
 
@@ -43,14 +43,14 @@ module.exports = function(options, register) {
         return cb(new Error('add failed - key ' + key + ' already exists'));
       }
       cache.set(key, val, function(err, reply) {
-        cb(err, {key: key});
+        cb(err, key);
       });
     });
   };
 
   cmds.delete = function(args, cb) {
     cache.del(args.key, function(err, reply) {
-      cb(err, {key: args.key});
+      cb(err, args.key);
     });
   };
 
@@ -60,16 +60,14 @@ module.exports = function(options, register) {
       var val = args.val;
 
       cache.get(key, function(err, oldVal) {
-        if (!oldVal) {
-          return cb(new Error(kind + ' failed - key ' + key + ' does not exist'));
-        }
+        if (!oldVal) return cb(err, null);
         oldVal = parseInt(oldVal, 10);
         if (typeof oldVal !== 'number' || isNaN(oldVal)) {
           return cb(new Error(kind + ' failed - value for key ' + key + ' is not a number'));
         }
         var newVal = kind === 'decr' ? oldVal - val : oldVal + val;
         cache.set(key, newVal, function(err, reply) {
-          cb(err, {val: newVal});
+          cb(err, newVal);
         });
       });
     }

@@ -14,7 +14,7 @@ describe('cache', function() {
   it('set', function(cb) {
     cache.set({key: 'a', val: 'one'}, function(err, out) {
       assert.equal(err, null);
-      assert(out.key, 'a');
+      assert(out, 'a');
       cb();
     });
   });
@@ -22,7 +22,7 @@ describe('cache', function() {
   it('get', function(cb) {
     cache.get({key: 'a'}, function(err, out) {
       assert.equal(err, null);
-      assert.equal(out.val, 'one');
+      assert.equal(out, 'one');
       cb();
     });
   });
@@ -30,7 +30,7 @@ describe('cache', function() {
   it('add', function(cb) {
     cache.add({key: 'b', val: 1}, function(err, out) {
       assert.equal(err, null);
-      assert.equal(out.key, 'b');
+      assert.equal(out, 'b');
       cb();
     });
   });
@@ -39,7 +39,7 @@ describe('cache', function() {
     cache.add({key: 'b', val: 'something'}, function(err, out) {
       assert(err);
       cache.get({key: 'b'}, function(err, out) {
-        assert.equal(out.val, 1);
+        assert.equal(out, 1);
         cb();
       });
     });
@@ -48,7 +48,7 @@ describe('cache', function() {
   it('incr', function(cb) {
     cache.incr({key: 'b', val: 4}, function(err, out) {
       assert.equal(err, null);
-      assert.equal(out.val, 5);
+      assert.equal(out, 5);
       cb();
     });
   });
@@ -56,7 +56,7 @@ describe('cache', function() {
   it('decr', function(cb) {
     cache.decr({key: 'b', val: 3}, function(err, out) {
       assert.equal(err, null);
-      assert.equal(out.val, 2);
+      assert.equal(out, 2);
       cb();
     });
   });
@@ -78,10 +78,10 @@ describe('cache', function() {
   it('delete', function(cb) {
     cache.delete({key: 'a'}, function(err, out) {
       assert.equal(err, null);
-      assert(out.key, 'a');
+      assert(out, 'a');
       cache.get({key: 'a'}, function(err, out) {
         assert.equal(err, null);
-        assert.equal(out.val, undefined);
+        assert.equal(out, undefined);
         cb();
       });
     });
