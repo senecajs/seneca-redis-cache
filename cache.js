@@ -39,9 +39,7 @@ module.exports = function(options, register) {
     var val = args.val;
 
     cache.exists(key, function(err, exists) {
-      if (exists) {
-        return cb(new Error('add failed - key ' + key + ' already exists'));
-      }
+      if (exists) return cb(err, key);
       cache.set(key, val, function(err, reply) {
         cb(err, key);
       });

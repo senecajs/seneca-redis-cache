@@ -40,7 +40,6 @@ describe('cache', function() {
 
   it('won\'t add exsting key', function(cb) {
     cache.add({key: b, val: 'something'}, function(err, out) {
-      assert(err);
       cache.get({key: b}, function(err, out) {
         assert.equal(out, 1);
         cb();
