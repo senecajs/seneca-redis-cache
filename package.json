@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "seneca": "^0.5.15",
-    "mocha": "^1.18.2"
+    "mocha": "^1.18.2",
+    "uuid": "^1.4.1"
   }
 }
