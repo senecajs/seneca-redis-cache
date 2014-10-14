@@ -2,13 +2,22 @@
 /*global describe, it */
 "use strict";
 
-var seneca = require('seneca')();
+var seneca = require('seneca')({log:'silent'});
 seneca.use('..');
 
 var assert = require('assert');
 var uuid = require('uuid');
 
+var standard = require('seneca-cache-test')
+
 describe('cache', function() {
+
+  
+  it('basic',function(done){
+    standard.basictest(seneca,done)
+  })
+
+
 
   var cache = seneca.pin({role: 'cache', cmd: '*'});
   var a = uuid.v4();

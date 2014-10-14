@@ -1,8 +1,8 @@
 {
   "name": "seneca-redis-cache",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Redis caching plugin for seneca",
-  "main": "cache.js",
+  "main": "redis.js",
   "scripts": {
     "test": "node_modules/.bin/mocha test/*.test.js"
   },
@@ -25,8 +25,9 @@
     "redis": "^0.10.1"
   },
   "devDependencies": {
-    "seneca": "^0.5.15",
-    "mocha": "^1.18.2",
-    "uuid": "^1.4.1"
+    "mocha": "~1.20.1",
+    "seneca": "~0.5.21",
+    "seneca-cache-test": "~0.1.2",
+    "uuid": "~2.0.1"
   }
 }

@@ -3,7 +3,7 @@
 
 var redis = require('redis');
 
-module.exports = function(options, register) {
+module.exports = function(options) {
   var seneca = this;
 
   options = seneca.util.deepextend({
@@ -39,7 +39,7 @@ module.exports = function(options, register) {
     var val = args.val;
 
     cache.exists(key, function(err, exists) {
-      if (exists) return cb(err, key);
+      if (exists) return cb(new Error('key exists: '+key), key);
       cache.set(key, val, function(err, reply) {
         cb(err, key);
       });
@@ -82,17 +82,31 @@ module.exports = function(options, register) {
   seneca.add({role: role, cmd: 'incr'}, cmds.incr);
   seneca.add({role: role, cmd: 'decr'}, cmds.decr);
 
-  seneca.add({role: 'seneca', cmd: 'close'}, function(args, cb) {
-    cache.quit(cb);
-  });
 
-  seneca.add({init: name}, function(args, done) {
-    cache = redis.createClient(options.redis.port, options.redis.host, options.redis);
-    cache.on('connect', function() {
-      done();
+  seneca.add({role:role,get:'native'},function(args,done){
+    done(null,cache)
+  })
+
+
+  seneca.add({role: 'seneca', cmd: 'close'}, function(args, cb) {
+    var closer = this
+    cache.quit(function(err){
+      closer.log.error('close-error',e)
+      this.prior(args,cb)
     });
   });
 
-  register(null, {name: name});
 
+  seneca.add({init: name}, function(args, done) {
+    cache = redis.createClient(
+      options.redis.port, 
+      options.redis.host, 
+      options.redis
+    );
+    cache.on('connect', done);
+    cache.on('error', done);
+  });
+
+
+  return {name: name};
 };
