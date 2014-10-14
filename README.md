@@ -1,6 +1,6 @@
 # seneca-redis-cache
 
-### Node.js Seneca redis caching module
+### Node.js Seneca redis caching module.
 
 This module is a plugin for the [Seneca framework](http://senecajs.org). It provides a set of common caching actions (`get`, `set` etc.), backed by [redis](https://github.com/mranney/node_redis).
 
