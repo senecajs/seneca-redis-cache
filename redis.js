@@ -21,7 +21,7 @@ module.exports = function(options) {
 
   cmds.set = function(args, cb) {
     var key = args.key;
-    var val = args.val;
+    var val = JSON.stringify(args.val);
     cache.set(key, val, function(err, reply) {
       cb(err, key);
     });
@@ -30,14 +30,24 @@ module.exports = function(options) {
   cmds.get = function(args, cb) {
     var key = args.key;
     var val = cache.get(key, function(err, val) {
-      cb(err, val);
+      if(err) {
+        cb(err, undefined)
+      } else {
+        try {
+          val = JSON.parse(val)
+        } catch(err) {
+          seneca.log.error(err)
+          err = new Error('Could not retrieve JSON data at key ['+key+']:' + val)
+          return cb(err, val);
+        }
+        cb(undefined, val);
+      }
     });
   };
 
   cmds.add = function(args, cb) {
     var key = args.key;
-    var val = args.val;
-
+    var val = JSON.stringify(args.val);
     cache.exists(key, function(err, exists) {
       if (exists) return cb(new Error('key exists: '+key), key);
       cache.set(key, val, function(err, reply) {
