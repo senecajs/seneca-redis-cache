@@ -1,17 +1,34 @@
+![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
+
 # seneca-redis-cache
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Coverage Status][coverage-badge]][coverage-url]
+[![Dependency Status][david-badge]][david-url]
+[![Gitter][gitter-badge]][gitter-url]
 
-### Node.js Seneca redis caching module.
+### Description
 
-This module is a plugin for the [Seneca framework](http://senecajs.org). It provides a set of common caching actions (`get`, `set` etc.), backed by [redis](https://github.com/mranney/node_redis).
+This module is a plugin for the [Seneca framework](http://senecajs.org). It provides a set of common caching actions (`get`, `set` etc.), backed by [redis](https://github.com/NodeRedis/node_redis).
 
 By moving cache operations into Seneca, you can change your cache implementation or business rules at a later point.
 For example, you might decide to send certain kinds of keys to a different cache mechanism, such as redis.
+
+### Seneca compatibility
+Supports Seneca versions **1.x** and **2.x**
+
+## Install
+
+```sh
+npm install seneca
+npm install seneca-redis-cache
+```
 
 ### Quick example
 
 This code snippet sets a value and then retrieves it.
 
-```JavaScript
+```js
 var seneca = require('seneca')();
 seneca.use('redis-cache');
 
@@ -26,7 +43,7 @@ seneca.ready(function(err) {
 
 The full action argument pattern can be a bit tedious, so use a Seneca _pin_ to make things more convenient:
 
-```JavaScript
+```js
 var cache = seneca.pin({role:'cache', cmd:'*'});
 
 cache.set({key: 'k1', val: 'v1'}, function(err) {
@@ -34,12 +51,6 @@ cache.set({key: 'k1', val: 'v1'}, function(err) {
     console.log('value = ' + out);
   });
 });
-```
-## Install
-
-```sh
-npm install seneca
-npm install seneca-redis-cache
 ```
 
 ## Common Cache API
@@ -57,17 +68,40 @@ All caching plugins, including this one, implement this action API.
 
 ## Extended API
 
-To access the underlying [redis](https://github.com/mranney/node_redis), use the action `plugin: 'redis-cache', cmd: 'native'`.
+To access the underlying [redis](https://github.com/NodeRedis/node_redis), use the action `plugin: 'redis-cache', cmd: 'native'`.
 
 The plugin also registers with the action `role: 'seneca', cmd: 'close'`. This sends the `QUIT` command to the redis connection when you call the `seneca.close` method.
 
 ### Options
 
-You can use any of the options from the node [redis](https://github.com/mranney/node_redis#rediscreateclientport-host-options) module directly as options to this plugin.
+You can use any of the options from the node [redis](https://github.com/NodeRedis/node_redis#options-object-properties) module directly as options to this plugin.
+
+## Contributing
+The [Senecajs org][] encourage open participation. If you feel you can help in any way, be it with
+documentation, examples, extra testing, or new features please get in touch.
 
 ## Test
 
 ```bash
-mocha test/cache.test.js
+npm run test
 ```
 
+## License
+Copyright (c) 2014-2016, Seamus D'Arcy and other contributors.
+Licensed under [MIT][].
+
+[npm-badge]: https://img.shields.io/npm/v/seneca-redis-cache.svg
+[npm-url]: https://npmjs.com/package/seneca-redis-cache
+[travis-badge]: https://travis-ci.org/senecajs/seneca-redis-cache.svg
+[travis-url]: https://travis-ci.org/senecajs/seneca-redis-cache
+[codeclimate-badge]: https://codeclimate.com/github/senecajs/seneca-redis-cache/badges/gpa.svg
+[codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-redis-cache
+[coverage-badge]: https://coveralls.io/repos/senecajs/seneca-redis-cache/badge.svg?branch=master&service=github
+[coverage-url]: https://coveralls.io/github/senecajs/seneca-redis-cache?branch=master
+[david-badge]: https://david-dm.org/senecajs/seneca-redis-cache.svg
+[david-url]: https://david-dm.org/senecajs/seneca-redis-cache
+[gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
+[gitter-url]: https://gitter.im/senecajs/seneca
+[MIT]: ./LICENSE
+[Senecajs org]: https://github.com/senecajs/
+[Seneca.js]: https://www.npmjs.com/package/seneca
