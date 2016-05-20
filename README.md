@@ -3,7 +3,7 @@
 # seneca-redis-cache
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
-[![Coverage Status][coverage-badge]][coverage-url]
+[![Coveralls][BadgeCoveralls]][Coveralls]
 [![Dependency Status][david-badge]][david-url]
 [![Gitter][gitter-badge]][gitter-url]
 
@@ -96,8 +96,8 @@ Licensed under [MIT][].
 [travis-url]: https://travis-ci.org/senecajs/seneca-redis-cache
 [codeclimate-badge]: https://codeclimate.com/github/senecajs/seneca-redis-cache/badges/gpa.svg
 [codeclimate-url]: https://codeclimate.com/github/senecajs/seneca-redis-cache
-[coverage-badge]: https://coveralls.io/repos/senecajs/seneca-redis-cache/badge.svg?branch=master&service=github
-[coverage-url]: https://coveralls.io/github/senecajs/seneca-redis-cache?branch=master
+[Coveralls]: https://coveralls.io/github/senecajs/seneca-redis-cache?branch=master
+[BadgeCoveralls]: https://coveralls.io/repos/github/senecajs/seneca-redis-cache/badge.svg?branch=master
 [david-badge]: https://david-dm.org/senecajs/seneca-redis-cache.svg
 [david-url]: https://david-dm.org/senecajs/seneca-redis-cache
 [gitter-badge]: https://badges.gitter.im/Join%20Chat.svg
