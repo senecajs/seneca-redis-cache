@@ -29,7 +29,7 @@ module.exports = function (options) {
 
   cmds.get = function (args, cb) {
     var key = args.key
-    var val = cache.get(key, function (err, val) {
+    cache.get(key, function (err, val) {
       if (err) {
         cb(err, undefined)
       }
@@ -39,8 +39,8 @@ module.exports = function (options) {
         }
         catch (err) {
           seneca.log.error(err)
-          err = new Error('Could not retrieve JSON data at key [' + key + ']:' + val)
-          return cb(err, val)
+          var error = new Error('Could not retrieve JSON data at key [' + key + ']:' + val)
+          return cb(error, val)
         }
         cb(undefined, val)
       }
@@ -51,6 +51,9 @@ module.exports = function (options) {
     var key = args.key
     var val = JSON.stringify(args.val)
     cache.exists(key, function (err, exists) {
+      if (err) {
+        cb(err, undefined)
+      }
       if (exists) return cb(new Error('key exists: ' + key), key)
       cache.set(key, val, function (err, reply) {
         cb(err, key)
