@@ -4,7 +4,9 @@
   "description": "Redis caching plugin for seneca",
   "main": "redis.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/*.test.js"
+    "test": "lab test/*.test.js -r console -v -L $LAB_FLAGS",
+    "test:node6": "LAB_FLAGS='--leaks' && npm test",
+    "coverage": "lab test/*.test.js -v -r lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -25,12 +27,13 @@
     "redis": "^0.10.1"
   },
   "devDependencies": {
-    "mocha": "~1.20.1",
-    "seneca": "~0.5.21",
+    "seneca": "plugin",
     "seneca-cache-test": "~0.1.2",
-    "uuid": "~2.0.1",
-    "eslint-config-seneca": "1.x.x",
-    "eslint-plugin-standard": "1.x.x",
-    "lab": "6.2.0"
+    "uuid": "2.0.2",
+    "eslint-config-seneca": "3.x.x",
+    "eslint-plugin-standard": "2.x.x",
+    "lab": "10.9.x",
+    "code": "3.0.x",
+    "coveralls": "2.11.x"
   }
 }
