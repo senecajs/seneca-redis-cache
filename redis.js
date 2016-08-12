@@ -52,7 +52,7 @@ module.exports = function (options) {
     var val = JSON.stringify(args.val)
     cache.exists(key, function (err, exists) {
       if (err) {
-        cb(err, undefined)
+        cb(err)
       }
       if (exists) return cb(new Error('key exists: ' + key), key)
       cache.set(key, val, function (err, reply) {
