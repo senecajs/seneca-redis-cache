@@ -15,7 +15,7 @@ By moving cache operations into Seneca, you can change your cache implementation
 For example, you might decide to send certain kinds of keys to a different cache mechanism, such as redis.
 
 ### Seneca compatibility
-Supports Seneca versions **1.x** and **2.x**
+Supports Seneca versions **1.x**, **2.x** and **3.x**
 
 ## Install
 
