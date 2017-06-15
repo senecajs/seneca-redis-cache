@@ -63,7 +63,7 @@ module.exports = function (options) {
 
   cmds.delete = function (args, cb) {
     cache.del(args.key, function (err, reply) {
-      cb(err, {args.key})
+      cb(err, {key: args.key})
     })
   }
 
