@@ -23,7 +23,7 @@ module.exports = function (options) {
     var key = args.key
     var val = JSON.stringify(args.val)
     cache.set(key, val, function (err, reply) {
-      cb(err, key)
+      cb(err, {key})
     })
   }
 
@@ -56,14 +56,14 @@ module.exports = function (options) {
       }
       if (exists) return cb(new Error('key exists: ' + key), key)
       cache.set(key, val, function (err, reply) {
-        cb(err, key)
+        cb(err, {key})
       })
     })
   }
 
   cmds.delete = function (args, cb) {
     cache.del(args.key, function (err, reply) {
-      cb(err, args.key)
+      cb(err, {args.key})
     })
   }
 
@@ -80,7 +80,7 @@ module.exports = function (options) {
         }
         var newVal = kind === 'decr' ? oldVal - val : oldVal + val
         cache.set(key, newVal, function (err, reply) {
-          cb(err, newVal)
+          cb(err, {newVal})
         })
       })
     }
