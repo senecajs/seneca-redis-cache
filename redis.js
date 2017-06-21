@@ -19,7 +19,7 @@ module.exports = function (options) {
 
     cmds.set = function (args, cb) {
         var key = args.key;
-        var val = JSON.stringify(args.val);
+        var val = JSON.stringify(args.value);
 
         let ex = options.autoExpire;
         if (ex > 0 || (args.expire && args.expire > 0)) {
