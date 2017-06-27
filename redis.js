@@ -56,6 +56,27 @@ module.exports = function (options) {
         })
     }
 
+    cmds.ttl = function (args, cb) {
+        var key = args.key;
+        cache.ttl(key, function (err, value) {
+            if (err) {
+                cb(err, undefined);
+            }
+            else {
+                try {
+                    value = JSON.parse(value);
+                }
+                catch (err) {
+                    seneca.log.error(err);
+
+                    var error = new Error('Could not retrieve JSON data at key [' + key + ']:' + value);
+                    return cb(error, value);
+                }
+                cb(undefined, { value });
+            }
+        })
+    }
+
     cmds.add = function (args, cb) {
         var key = args.key
         var val = JSON.stringify(args.val)
@@ -73,6 +94,24 @@ module.exports = function (options) {
     cmds.delete = function (args, cb) {
         cache.del(args.key, function (err, reply) {
             cb(err, { key: args.key })
+        })
+    }
+
+    cmds.keys = function (args, cb) {
+        let pattern = args.pattern;
+        if (pattern === null || pattern === undefined) {
+            pattern = '*';
+        }
+        cache.keys(pattern, function (err, reply) {
+            const keys = reply;
+            cb(err, keys)
+        })
+    }
+
+    cmds.flushAll = function (args, cb) {
+        cache.flushall(function (err, reply) {
+            const keys = reply;
+            cb(err, {})
         })
     }
 
@@ -105,6 +144,9 @@ module.exports = function (options) {
     seneca.add({ role: role, cmd: 'delete' }, cmds.delete)
     seneca.add({ role: role, cmd: 'incr' }, cmds.incr)
     seneca.add({ role: role, cmd: 'decr' }, cmds.decr)
+    seneca.add({ role: role, cmd: 'keys' }, cmds.keys)
+    seneca.add({ role: role, cmd: 'ttl' }, cmds.ttl)
+    seneca.add({ role: role, cmd: 'flushAll' }, cmds.flushAll)
 
 
     seneca.add({ role: role, get: 'native' }, function (args, done) {
