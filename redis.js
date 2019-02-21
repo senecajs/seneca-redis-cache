@@ -5,7 +5,11 @@ var Redis = require('redis')
 
 module.exports = redis_cache
 module.exports.defaults = {
-  expire: 60 * 60 // 1 hour
+  expire: 60 * 60, // 1 hour
+  redis: {
+    port: 6379,
+    host: '127.0.0.1'
+  }
 }
 module.exports.errors = {
   key_exists: 'Key <%=key%> exists.',
@@ -19,7 +23,7 @@ function redis_cache(options) {
 
   options = seneca.util.deepextend(
     {
-      Redis: {
+      redis: {
         port: 6379,
         host: '127.0.0.1'
       }
@@ -143,9 +147,9 @@ function redis_cache(options) {
 
   seneca.add({ init: name }, function(msg, done) {
     cache = Redis.createClient(
-      options.Redis.port,
-      options.Redis.host,
-      options.Redis
+      options.redis.port,
+      options.redis.host,
+      options.redis
     )
     cache.on('connect', done)
     cache.on('error', done)
