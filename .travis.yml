@@ -16,3 +16,9 @@ before_script:
 
 after_script:
   - npm run coveralls
+
+
+services:
+  - memcached
+  - redis-server
+  
