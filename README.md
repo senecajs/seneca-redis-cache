@@ -41,17 +41,14 @@ seneca.ready(function(err) {
 });
 ```
 
-The full action argument pattern can be a bit tedious, so use a Seneca _pin_ to make things more convenient:
 
-```js
-var cache = seneca.pin({role:'cache', cmd:'*'});
+<!--START:action-list-->
+<!--END:action-list-->
 
-cache.set({key: 'k1', val: 'v1'}, function(err) {
-  cache.get({key:'k1'}, function(err, out) {
-    console.log('value = ' + out);
-  });
-});
-```
+<!--START:action-desc-->
+<!--END:action-desc-->
+
+
 
 ## Common Cache API
 

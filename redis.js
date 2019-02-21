@@ -1,88 +1,120 @@
-/* Copyright (c) 2014 Seamus D'Arcy */
+/* Copyright (c) 2014-2019 Richard Rodger, Seamus D'Arcy, and other contributors, MIT License. */
 'use strict'
 
 var Redis = require('redis')
 
-module.exports = function (options) {
+module.exports = redis_cache
+module.exports.defaults = {
+  expire: 60 * 60 // 1 hour
+}
+module.exports.errors = {
+  key_exists: 'Key <%=key%> exists.',
+  not_json: 'Value for key <%=key%> is cannot be parsed as JSON: <%=val%>.',
+  op_failed_nan:
+    'Operation <%=op%> failed for key <%=key%> as value is not a number: <%=oldVal%>.'
+}
+
+function redis_cache(options) {
   var seneca = this
 
-  options = seneca.util.deepextend({
-    Redis: {
-      port: 6379,
-      host: '127.0.0.1'
-    }
-  }, options)
+  options = seneca.util.deepextend(
+    {
+      Redis: {
+        port: 6379,
+        host: '127.0.0.1'
+      }
+    },
+    options
+  )
 
   var cmds = {}
   var name = 'redis-cache'
   var role = 'cache'
+  var expire = options.expire || 60 * 60
 
   var cache
 
-  cmds.set = function (args, cb) {
-    var key = args.key
-    var val = JSON.stringify(args.val)
-    cache.set(key, val, function (err, reply) {
-      cb(err, key)
+  cmds.set = function(msg, reply) {
+    var key = msg.key
+    var val = JSON.stringify(msg.val)
+
+    cache.set(key, val, 'EX', expire, function(err) {
+      reply(err, { key: key })
     })
   }
 
-  cmds.get = function (args, cb) {
-    var key = args.key
-    cache.get(key, function (err, val) {
+  cmds.get = function(msg, reply) {
+    var seneca = this
+    var key = msg.key
+    cache.get(key, function(err, val) {
       if (err) {
-        cb(err, undefined)
-      }
-      else {
+        reply(err)
+      } else {
         try {
           val = JSON.parse(val)
+        } catch (err) {
+          return reply(
+            seneca.fail('not_json', { throw$: false, key: key, val: val })
+          )
         }
-        catch (err) {
-          seneca.log.error(err)
-          var error = new Error('Could not retrieve JSON data at key [' + key + ']:' + val)
-          return cb(error, val)
-        }
-        cb(undefined, val)
+        reply({ value: val })
       }
     })
   }
 
-  cmds.add = function (args, cb) {
-    var key = args.key
-    var val = JSON.stringify(args.val)
-    cache.exists(key, function (err, exists) {
+  cmds.add = function(msg, reply) {
+    var seneca = this
+    var key = msg.key
+    var val = JSON.stringify(msg.val)
+    cache.exists(key, function(err, exists) {
       if (err) {
-        cb(err)
+        reply(err)
       }
-      if (exists) return cb(new Error('key exists: ' + key), key)
-      cache.set(key, val, function (err, reply) {
-        cb(err, key)
+
+      if (exists) {
+        return reply(seneca.fail('key_exists', { throw$: false, key: key }))
+      }
+
+      cache.set(key, val, 'EX', expire, function(err) {
+        reply(err, { key: key })
       })
     })
   }
 
-  cmds.delete = function (args, cb) {
-    cache.del(args.key, function (err, reply) {
-      cb(err, args.key)
+  cmds.delete = function(msg, reply) {
+    cache.del(msg.key, function(err) {
+      reply(err, { key: msg.key })
     })
   }
 
-  function incrdecr (kind) {
-    return function (args, cb) {
-      var key = args.key
-      var val = args.val
+  function incrdecr(kind) {
+    var dir = 'incr' === kind ? 1 : -1
+    return function(msg, reply) {
+      var seneca = this
+      var key = msg.key
+      var val = msg.val
 
-      cache.get(key, function (err, oldVal) {
-        if (!oldVal) return cb(err, null)
-        oldVal = parseInt(oldVal, 10)
-        if (typeof oldVal !== 'number' || isNaN(oldVal)) {
-          return cb(new Error(kind + ' failed - value for key ' + key + ' is not a number'))
-        }
-        var newVal = kind === 'decr' ? oldVal - val : oldVal + val
-        cache.set(key, newVal, function (err, reply) {
-          cb(err, newVal)
+      if (val && 1 < val) {
+        cache[kind + 'by'](key, val, function(err, outval) {
+          if (err) return reply(err)
+
+          var result = 1 + val === dir * outval ? false : outval
+          if (false === result) {
+            cache.expire(key, expire)
+          }
+          reply({ value: result })
         })
-      })
+      } else {
+        cache[kind](key, function(err, outval) {
+          if (err) return reply(err)
+
+          var result = 1 === dir * outval ? false : outval
+          if (false === result) {
+            cache.expire(key, expire, function() {})
+          }
+          reply({ value: result })
+        })
+      }
     }
   }
 
@@ -90,29 +122,26 @@ module.exports = function (options) {
   cmds.decr = incrdecr('decr')
 
   // cache role
-  seneca.add({role: role, cmd: 'set'}, cmds.set)
-  seneca.add({role: role, cmd: 'get'}, cmds.get)
-  seneca.add({role: role, cmd: 'add'}, cmds.add)
-  seneca.add({role: role, cmd: 'delete'}, cmds.delete)
-  seneca.add({role: role, cmd: 'incr'}, cmds.incr)
-  seneca.add({role: role, cmd: 'decr'}, cmds.decr)
+  seneca.add({ role: role, cmd: 'set' }, cmds.set)
+  seneca.add({ role: role, cmd: 'get' }, cmds.get)
+  seneca.add({ role: role, cmd: 'add' }, cmds.add)
+  seneca.add({ role: role, cmd: 'delete' }, cmds.delete)
+  seneca.add({ role: role, cmd: 'incr' }, cmds.incr)
+  seneca.add({ role: role, cmd: 'decr' }, cmds.decr)
 
-
-  seneca.add({role: role, get: 'native'}, function (args, done) {
+  seneca.add({ role: role, get: 'native' }, function(msg, done) {
     done(null, cache)
   })
 
-
-  seneca.add({role: 'seneca', cmd: 'close'}, function (args, cb) {
+  seneca.add({ role: 'seneca', cmd: 'close' }, function(msg, reply) {
     var closer = this
-    cache.quit(function (err) {
+    cache.quit(function(err) {
       closer.log.error('close-error', err)
-      this.prior(args, cb)
+      this.prior(msg, reply)
     })
   })
 
-
-  seneca.add({init: name}, function (args, done) {
+  seneca.add({ init: name }, function(msg, done) {
     cache = Redis.createClient(
       options.Redis.port,
       options.Redis.host,
@@ -122,6 +151,5 @@ module.exports = function (options) {
     cache.on('error', done)
   })
 
-
-  return {name: name}
+  return { name: name }
 }
