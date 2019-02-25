@@ -20,7 +20,7 @@ var expect = Code.expect
 
 var seneca = Seneca()
   .test()
-  .quiet()
+  .quiet() // comment out to see error details
   .use(Plugin)
 
 var Uuid = require('uuid')

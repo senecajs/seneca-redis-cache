@@ -1,6 +1,6 @@
 {
   "name": "@seneca/redis-cache",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Redis caching plugin for seneca",
   "main": "redis.js",
   "scripts": {
@@ -39,8 +39,8 @@
     "redis": "^2.8.0"
   },
   "devDependencies": {
-    "@seneca/cache-test": "^1.1.0",
-    "coveralls": "^3.0.2",
+    "@seneca/cache-test": "^1.2.0",
+    "coveralls": "^3.0.3",
     "lab": "^18.0.2",
     "prettier": "^1.16.4",
     "seneca": "plugin",

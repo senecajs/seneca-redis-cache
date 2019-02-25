@@ -58,7 +58,7 @@ function redis_cache(options) {
           val = JSON.parse(val)
         } catch (err) {
           return reply(
-            seneca.fail('not_json', { throw$: false, key: key, val: val })
+            seneca.error('not_json', { throw$: false, key: key, val: val })
           )
         }
         reply({ value: val })
@@ -76,7 +76,7 @@ function redis_cache(options) {
       }
 
       if (exists) {
-        return reply(seneca.fail('key_exists', { throw$: false, key: key }))
+        return reply(seneca.error('key_exists', { throw$: false, key: key }))
       }
 
       cache.set(key, val, 'EX', expire, function(err) {
