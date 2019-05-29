@@ -43,9 +43,93 @@ seneca.ready(function(err) {
 
 
 <!--START:action-list-->
+
+
+## Action Patterns
+
+* [cmd:get,role:cache](#-cmdgetrolecache-)
+* [cmd:set,role:cache](#-cmdsetrolecache-)
+* [cmd:add,role:cache](#-cmdaddrolecache-)
+* [cmd:delete,role:cache](#-cmddeleterolecache-)
+* [cmd:incr,role:cache](#-cmdincrrolecache-)
+* [cmd:decr,role:cache](#-cmddecrrolecache-)
+* [cmd:clear,role:cache](#-cmdclearrolecache-)
+* [get:native,role:cache](#-getnativerolecache-)
+* [init:redis-cache](#-initrediscache-)
+
+
 <!--END:action-list-->
 
 <!--START:action-desc-->
+
+
+## Action Descriptions
+
+### &laquo; `cmd:get,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:set,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:add,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:delete,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:incr,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:decr,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `cmd:clear,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `get:native,role:cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `init:redis-cache` &raquo;
+
+No description provided.
+
+
+
+----------
+
+
 <!--END:action-desc-->
 
 

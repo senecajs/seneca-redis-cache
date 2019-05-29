@@ -126,11 +126,10 @@ function redis_cache(options) {
   cmds.decr = incrdecr('decr')
 
   cmds.clear = function(msg, reply) {
-    cache.flushall('async',function() {
-      reply()
-    })
+    reply()
+    cache.flushall('async')
   }
-  
+
   // cache role
   seneca.add({ role: role, cmd: 'set' }, cmds.set)
   seneca.add({ role: role, cmd: 'get' }, cmds.get)
