@@ -39,10 +39,11 @@
     "redis": "^2.8.0"
   },
   "devDependencies": {
-    "@seneca/cache-test": "^1.2.0",
+    "@hapi/code": "^5.3.1",
+    "@hapi/lab": "^19.0.1",
+    "@seneca/cache-test": "^2.0.0",
     "coveralls": "^3.0.3",
-    "lab": "^18.0.2",
-    "prettier": "^1.16.4",
+    "prettier": "^1.17.1",
     "seneca": "plugin",
     "seneca-doc": "^0.1.2",
     "seneca-plugin-validator": "^0.0.1",

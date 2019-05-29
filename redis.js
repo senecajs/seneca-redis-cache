@@ -125,6 +125,12 @@ function redis_cache(options) {
   cmds.incr = incrdecr('incr')
   cmds.decr = incrdecr('decr')
 
+  cmds.clear = function(msg, reply) {
+    cache.flushall('async',function() {
+      reply()
+    })
+  }
+  
   // cache role
   seneca.add({ role: role, cmd: 'set' }, cmds.set)
   seneca.add({ role: role, cmd: 'get' }, cmds.get)
@@ -132,6 +138,7 @@ function redis_cache(options) {
   seneca.add({ role: role, cmd: 'delete' }, cmds.delete)
   seneca.add({ role: role, cmd: 'incr' }, cmds.incr)
   seneca.add({ role: role, cmd: 'decr' }, cmds.decr)
+  seneca.add({ role: role, cmd: 'clear' }, cmds.clear)
 
   seneca.add({ role: role, get: 'native' }, function(msg, done) {
     done(null, cache)
