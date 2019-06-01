@@ -147,7 +147,7 @@ function redis_cache(options) {
     var closer = this
     cache.quit(function(err) {
       closer.log.error('close-error', err)
-      this.prior(msg, reply)
+      closer.prior(msg, reply)
     })
   })
 
