@@ -1,6 +1,6 @@
 {
   "name": "@seneca/redis-cache",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Redis caching plugin for seneca",
   "main": "redis.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "reset": "npm run clean && npm i && npm test",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
     "repo-publish": "npm run clean && npm install --registry http://registry.npmjs.org && npm run repo-publish-quick",
-    "repo-publish-quick": "npm run prettier && npm test && npm run doc && npm run repo-tag && npm publish --access public"
+    "repo-publish-quick": "npm run prettier && npm test && npm run doc && npm run repo-tag && npm publish --registry http://registry.npmjs.org --access public"
   },
   "repository": {
     "type": "git",
