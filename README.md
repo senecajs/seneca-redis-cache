@@ -45,6 +45,30 @@ seneca.ready(function(err) {
 
 
 <!--START:options-->
+
+
+## Options
+
+* `expire` : number <i><small>3600</small></i>
+* `redis.port` : number <i><small>6379</small></i>
+* `redis.host` : string <i><small>"127.0.0.1"</small></i>
+
+
+Set plugin options when loading with:
+```js
+
+
+seneca.use('redis-cache', { name: value, ... })
+
+
+```
+
+
+<small>Note: <code>foo.bar</code> in the list above means 
+<code>{ foo: { bar: ... } }</code></small> 
+
+
+
 <!--END:options-->
 
 <!--START:action-list-->
@@ -52,15 +76,15 @@ seneca.ready(function(err) {
 
 ## Action Patterns
 
-* [cmd:get,role:cache](#-cmdgetrolecache-)
-* [cmd:set,role:cache](#-cmdsetrolecache-)
-* [cmd:add,role:cache](#-cmdaddrolecache-)
-* [cmd:delete,role:cache](#-cmddeleterolecache-)
-* [cmd:incr,role:cache](#-cmdincrrolecache-)
-* [cmd:decr,role:cache](#-cmddecrrolecache-)
-* [cmd:clear,role:cache](#-cmdclearrolecache-)
-* [get:native,role:cache](#-getnativerolecache-)
 * [init:redis-cache](#-initrediscache-)
+* [role:cache,cmd:add](#-rolecachecmdadd-)
+* [role:cache,cmd:clear](#-rolecachecmdclear-)
+* [role:cache,cmd:decr](#-rolecachecmddecr-)
+* [role:cache,cmd:delete](#-rolecachecmddelete-)
+* [role:cache,cmd:get](#-rolecachecmdget-)
+* [role:cache,cmd:incr](#-rolecachecmdincr-)
+* [role:cache,cmd:set](#-rolecachecmdset-)
+* [role:cache,get:native](#-rolecachegetnative-)
 
 
 <!--END:action-list-->
@@ -70,63 +94,63 @@ seneca.ready(function(err) {
 
 ## Action Descriptions
 
-### &laquo; `cmd:get,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:set,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:add,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:delete,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:incr,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:decr,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `cmd:clear,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
-### &laquo; `get:native,role:cache` &raquo;
-
-No description provided.
-
-
-
-----------
 ### &laquo; `init:redis-cache` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:add` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:clear` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:decr` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:delete` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:get` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:incr` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,cmd:set` &raquo;
+
+No description provided.
+
+
+
+----------
+### &laquo; `role:cache,get:native` &raquo;
 
 No description provided.
 
