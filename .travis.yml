@@ -6,9 +6,10 @@ env:
 
 
 node_js:
-  - '11'
+  - '14'
+  - '13'
+  - '12'
   - '10'
-  - '8'
 
 before_script:
   - npm uninstall seneca
@@ -19,6 +20,5 @@ after_script:
 
 
 services:
-  - memcached
   - redis-server
   

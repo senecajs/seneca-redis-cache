@@ -4,6 +4,8 @@
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
 [![Coveralls][BadgeCoveralls]][Coveralls]
+[![Maintainability](https://api.codeclimate.com/v1/badges/36abf0f68317851f768d/maintainability)](https://codeclimate.com/github/senecajs/seneca-redis-cache/maintainability)
+[![DeepScan grade](https://deepscan.io/api/teams/5016/projects/12816/branches/203962/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=5016&pid=12816&bid=203962)
 [![Dependency Status][david-badge]][david-url]
 [![Gitter][gitter-badge]][gitter-url]
 
@@ -41,6 +43,9 @@ seneca.ready(function(err) {
 });
 ```
 
+
+<!--START:options-->
+<!--END:options-->
 
 <!--START:action-list-->
 

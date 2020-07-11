@@ -8,14 +8,14 @@ module.exports.defaults = {
   expire: 60 * 60, // 1 hour
   redis: {
     port: 6379,
-    host: '127.0.0.1'
-  }
+    host: '127.0.0.1',
+  },
 }
 module.exports.errors = {
   key_exists: 'Key <%=key%> exists.',
   not_json: 'Value for key <%=key%> is cannot be parsed as JSON: <%=val%>.',
   op_failed_nan:
-    'Operation <%=op%> failed for key <%=key%> as value is not a number: <%=oldVal%>.'
+    'Operation <%=op%> failed for key <%=key%> as value is not a number: <%=oldVal%>.',
 }
 
 function redis_cache(options) {
@@ -25,8 +25,8 @@ function redis_cache(options) {
     {
       redis: {
         port: 6379,
-        host: '127.0.0.1'
-      }
+        host: '127.0.0.1',
+      },
     },
     options
   )
@@ -38,19 +38,19 @@ function redis_cache(options) {
 
   var cache
 
-  cmds.set = function(msg, reply) {
+  cmds.set = function (msg, reply) {
     var key = msg.key
     var val = JSON.stringify(msg.val)
 
-    cache.set(key, val, 'EX', expire, function(err) {
+    cache.set(key, val, 'EX', expire, function (err) {
       reply(err, { key: key })
     })
   }
 
-  cmds.get = function(msg, reply) {
+  cmds.get = function (msg, reply) {
     var seneca = this
     var key = msg.key
-    cache.get(key, function(err, val) {
+    cache.get(key, function (err, val) {
       if (err) {
         reply(err)
       } else {
@@ -66,11 +66,11 @@ function redis_cache(options) {
     })
   }
 
-  cmds.add = function(msg, reply) {
+  cmds.add = function (msg, reply) {
     var seneca = this
     var key = msg.key
     var val = JSON.stringify(msg.val)
-    cache.exists(key, function(err, exists) {
+    cache.exists(key, function (err, exists) {
       if (err) {
         reply(err)
       }
@@ -79,27 +79,27 @@ function redis_cache(options) {
         return reply(seneca.error('key_exists', { throw$: false, key: key }))
       }
 
-      cache.set(key, val, 'EX', expire, function(err) {
+      cache.set(key, val, 'EX', expire, function (err) {
         reply(err, { key: key })
       })
     })
   }
 
-  cmds.delete = function(msg, reply) {
-    cache.del(msg.key, function(err) {
+  cmds.delete = function (msg, reply) {
+    cache.del(msg.key, function (err) {
       reply(err, { key: msg.key })
     })
   }
 
   function incrdecr(kind) {
     var dir = 'incr' === kind ? 1 : -1
-    return function(msg, reply) {
-      var seneca = this
+    return function (msg, reply) {
+      // var seneca = this
       var key = msg.key
       var val = msg.val
 
       if (val && 1 < val) {
-        cache[kind + 'by'](key, val, function(err, outval) {
+        cache[kind + 'by'](key, val, function (err, outval) {
           if (err) return reply(err)
 
           var result = 1 + val === dir * outval ? false : outval
@@ -109,12 +109,12 @@ function redis_cache(options) {
           reply({ value: result })
         })
       } else {
-        cache[kind](key, function(err, outval) {
+        cache[kind](key, function (err, outval) {
           if (err) return reply(err)
 
           var result = 1 === dir * outval ? false : outval
           if (false === result) {
-            cache.expire(key, expire, function() {})
+            cache.expire(key, expire, function () {})
           }
           reply({ value: result })
         })
@@ -125,7 +125,7 @@ function redis_cache(options) {
   cmds.incr = incrdecr('incr')
   cmds.decr = incrdecr('decr')
 
-  cmds.clear = function(msg, reply) {
+  cmds.clear = function (msg, reply) {
     reply()
     cache.flushall('async')
   }
@@ -139,19 +139,19 @@ function redis_cache(options) {
   seneca.add({ role: role, cmd: 'decr' }, cmds.decr)
   seneca.add({ role: role, cmd: 'clear' }, cmds.clear)
 
-  seneca.add({ role: role, get: 'native' }, function(msg, done) {
+  seneca.add({ role: role, get: 'native' }, function (msg, done) {
     done(null, cache)
   })
 
-  seneca.add({ role: 'seneca', cmd: 'close' }, function(msg, reply) {
+  seneca.add({ role: 'seneca', cmd: 'close' }, function (msg, reply) {
     var closer = this
-    cache.quit(function(err) {
+    cache.quit(function (err) {
       closer.log.error('close-error', err)
       closer.prior(msg, reply)
     })
   })
 
-  seneca.add({ init: name }, function(msg, done) {
+  seneca.add({ init: name }, function (msg, done) {
     cache = Redis.createClient(
       options.redis.port,
       options.redis.host,
