@@ -49,6 +49,6 @@
     "prettier": "^2.0.5",
     "seneca": "plugin",
     "seneca-plugin-validator": "^0.6.1",
-    "uuid": "^8.2.0"
+    "uuid": "^14.0.0"
   }
 }
