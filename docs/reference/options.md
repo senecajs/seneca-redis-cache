@@ -5,7 +5,7 @@ Set options with `seneca.use('@seneca/redis-cache', { ... })` or under
 
 | Option | Type | Default | Effect |
 | ------ | ---- | ------- | ------ |
-| `expire` | number (seconds) | `3600` | Time to live of keys written by `cmd:set` and `cmd:add`, and set on new counters by `cmd:incr` and `cmd:decr`. A falsy value gives 3600. |
+| `expire` | number (seconds) | `3600` | Time to live of keys written by `cmd:set` and `cmd:add`, and set on new counters created by `cmd:incr` / `cmd:decr` with `val: 1` (counters created with a larger `val` currently get no expiry, see issue #31). A falsy value gives 3600. |
 | `redis` | object | `{ port: 6379, host: '127.0.0.1' }` | Connection settings, passed as the options object to `Redis.createClient(port, host, options)` of the `redis` v3 package. |
 | `redis.port` | number | `6379` | Redis server port. |
 | `redis.host` | string | `'127.0.0.1'` | Redis server host. |
