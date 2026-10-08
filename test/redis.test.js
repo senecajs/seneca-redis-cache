@@ -117,13 +117,12 @@ describe('cache', function () {
     })
   })
 
-  // The original lab test called `expect(err)` without an assertion, so
-  // these two tests only check that a reply arrives.
   it("won't incr unless value is an integer", function (cb) {
     seneca.act({ role: 'cache', cmd: 'incr', key: a, val: 1 }, function (
       err,
       out
     ) {
+      assert.ok(err)
       cb()
     })
   })
@@ -133,6 +132,7 @@ describe('cache', function () {
       err,
       out
     ) {
+      assert.ok(err)
       cb()
     })
   })
