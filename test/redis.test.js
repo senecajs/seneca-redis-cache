@@ -39,14 +39,14 @@ describe('cache', function () {
   const b = Uuid.v4()
 
   it('set', function (cb) {
-    seneca.act({ role: 'cache', cmd: 'set', key: a, val: 'one' }, function (
-      err,
-      out
-    ) {
-      assert.ok(!err)
-      assert.strictEqual(out.key, a)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'set', key: a, val: 'one' },
+      function (err, out) {
+        assert.ok(!err)
+        assert.strictEqual(out.key, a)
+        cb()
+      }
+    )
   })
 
   it('get', function (cb) {
@@ -58,14 +58,14 @@ describe('cache', function () {
   })
 
   it('add', function (cb) {
-    seneca.act({ role: 'cache', cmd: 'add', key: b, val: 1 }, function (
-      err,
-      out
-    ) {
-      assert.ok(!err)
-      assert.strictEqual(out.key, b)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'add', key: b, val: 1 },
+      function (err, out) {
+        assert.ok(!err)
+        assert.strictEqual(out.key, b)
+        cb()
+      }
+    )
   })
 
   it("won't add exsting key", function (cb) {
@@ -96,45 +96,45 @@ describe('cache', function () {
   })
 
   it('incr-jump', function (cb) {
-    seneca.act({ role: 'cache', cmd: 'incr', key: b, val: 4 }, function (
-      err,
-      out
-    ) {
-      assert.ok(!err)
-      assert.strictEqual(out.value, 7)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'incr', key: b, val: 4 },
+      function (err, out) {
+        assert.ok(!err)
+        assert.strictEqual(out.value, 7)
+        cb()
+      }
+    )
   })
 
   it('decr', function (cb) {
-    seneca.act({ role: 'cache', cmd: 'decr', key: b, val: 3 }, function (
-      err,
-      out
-    ) {
-      assert.ok(!err)
-      assert.strictEqual(out.value, 4)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'decr', key: b, val: 3 },
+      function (err, out) {
+        assert.ok(!err)
+        assert.strictEqual(out.value, 4)
+        cb()
+      }
+    )
   })
 
   it("won't incr unless value is an integer", function (cb) {
-    seneca.act({ role: 'cache', cmd: 'incr', key: a, val: 1 }, function (
-      err,
-      out
-    ) {
-      assert.ok(err)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'incr', key: a, val: 1 },
+      function (err, out) {
+        assert.ok(err)
+        cb()
+      }
+    )
   })
 
   it("won't decr if value is not an integer", function (cb) {
-    seneca.act({ role: 'cache', cmd: 'decr', key: a, val: 1 }, function (
-      err,
-      out
-    ) {
-      assert.ok(err)
-      cb()
-    })
+    seneca.act(
+      { role: 'cache', cmd: 'decr', key: a, val: 1 },
+      function (err, out) {
+        assert.ok(err)
+        cb()
+      }
+    )
   })
 
   it('delete', function (cb) {

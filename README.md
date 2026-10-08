@@ -3,10 +3,11 @@
 
 # @seneca/redis-cache
 
+A [Seneca](https://senecajs.org) plugin that implements the Seneca cache API (`role:cache`) on a [redis](https://redis.io) server, using the `redis` v3 Node.js client. Works with Seneca 3 and the Seneca 4 prerelease (`4.0.0-rc5`) on Node 22 and 24.
+
 [![npm version](https://img.shields.io/npm/v/@seneca/redis-cache.svg)](https://npmjs.com/package/@seneca/redis-cache)
 [![build](https://github.com/senecajs/seneca-redis-cache/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-redis-cache/actions/workflows/build.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/senecajs/seneca-redis-cache/badge.svg)](https://snyk.io/test/github/senecajs/seneca-redis-cache)
-[![Coverage Status](https://coveralls.io/repos/github/senecajs/seneca-redis-cache/badge.svg?branch=master)](https://coveralls.io/github/senecajs/seneca-redis-cache?branch=master)
 [![DeepScan grade](https://deepscan.io/api/teams/5016/projects/12816/branches/203962/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=5016&pid=12816&bid=203962)
 
 | ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
@@ -15,149 +16,95 @@
 ## Install
 
 ```
-npm install seneca
-npm install seneca-redis-cache
+npm install seneca @seneca/redis-cache
 ```
+
+You also need a redis server (default `127.0.0.1:6379`).
+
 ## Quick Example
 
-This code snippet sets a value and then retrieves it.
+```js
+const Seneca = require('seneca')
 
-```
-var seneca = require('seneca')();
-seneca.use('redis-cache');
+const seneca = Seneca().use('@seneca/redis-cache', {
+  redis: { host: '127.0.0.1', port: 6379 },
+})
 
-seneca.ready(function(err) {
-  seneca.act({role: 'cache', cmd: 'set', key: 'k1', val: 'v1'}, function(err) {
-    seneca.act({role: 'cache', cmd: 'get', key: 'k1'}, function(err, out) {
-      console.log('value = ' + out)
-    });
-  });
-});
+seneca.ready(async function () {
+  await seneca.post('role:cache,cmd:set', { key: 'k1', val: 'v1' })
+  const out = await seneca.post('role:cache,cmd:get', { key: 'k1' })
+  console.log(out) // { value: 'v1' }
+  seneca.close()
+})
 ```
+
 ## More Examples
 
-See [test/](test/) for usage examples.
+* [Getting started](docs/tutorials/getting-started.md), with the runnable
+  [example program](docs/examples/getting-started.js).
+* [Configure the redis connection](docs/how-to/configure-the-redis-connection.md)
+* [Use the native redis client](docs/how-to/use-the-native-client.md)
+* [Run the tests locally](docs/how-to/run-the-tests-locally.md)
+
+The full index is [docs/README.md](docs/README.md).
 
 ## Motivation
 
-Redis caching plugin for the Seneca framework.
+Seneca defines a common cache API so that services can swap cache back ends
+without code changes. This plugin provides that API on redis. See
+[How the plugin works](docs/explanation/how-it-works.md).
 
 ## Support
 
-If you're using this module and need help, you can:
-
-- Post a [github issue](https://github.com/senecajs/seneca-redis-cache/issues)
-- Tweet to [@senecajs](http://twitter.com/senecajs)
-- Ask on the [Gitter](https://gitter.im/senecajs/seneca)
-
+* Post a [GitHub issue](https://github.com/senecajs/seneca-redis-cache/issues).
+* Read the [Seneca documentation](https://senecajs.org).
+* This module is sponsored and supported by [Voxgig](https://www.voxgig.com).
 
 ## API
 
-### Options
+| Option | Default | Reference |
+| ------ | ------- | --------- |
+| `expire` | `3600` seconds | [Options](docs/reference/options.md#expire) |
+| `redis` | `{ port: 6379, host: '127.0.0.1' }` | [Options](docs/reference/options.md#redis) |
 
-* `expire` : number <i><small>3600</small></i>
-* `redis.port` : number <i><small>6379</small></i>
-* `redis.host` : string <i><small>"127.0.0.1"</small></i>
+| Pattern | Purpose |
+| ------- | ------- |
+| `role:cache,cmd:set` | Store a value. |
+| `role:cache,cmd:get` | Read a value. |
+| `role:cache,cmd:add` | Store a value if the key is new. |
+| `role:cache,cmd:delete` | Delete a key. |
+| `role:cache,cmd:incr` | Increment a number. |
+| `role:cache,cmd:decr` | Decrement a number. |
+| `role:cache,cmd:clear` | Flush the redis server. |
+| `role:cache,get:native` | Get the redis client. |
 
-Set plugin options when loading with:
-```
-seneca.use('redis-cache', { name: value, ... })
-```
-You can also use any of the options from the node [redis](https://github.com/NodeRedis/node_redis#options-object-properties) module directly as options to this plugin.
-
-### Action Patterns
-
-* [init:redis-cache](#-initrediscache-)
-* [role:cache,cmd:add](#-rolecachecmdadd-)
-* [role:cache,cmd:clear](#-rolecachecmdclear-)
-* [role:cache,cmd:decr](#-rolecachecmddecr-)
-* [role:cache,cmd:delete](#-rolecachecmddelete-)
-* [role:cache,cmd:get](#-rolecachecmdget-)
-* [role:cache,cmd:incr](#-rolecachecmdincr-)
-* [role:cache,cmd:set](#-rolecachecmdset-)
-* [role:cache,get:native](#-rolecachegetnative-)
-
-### Action Descriptions
-
-### &laquo; `init:redis-cache` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:add` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:clear` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:decr` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:delete` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:get` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:incr` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,cmd:set` &raquo;
-
-No description provided.
-
-----------
-### &laquo; `role:cache,get:native` &raquo;
-
-No description provided.
-
-----------
-
-### Common Cache API
-
-Seneca has a common caching API with the following actions:
-
-   * `role:cache, cmd:set` store a value - _key_ and _val_ arguments required
-   * `role:cache, cmd:get` retreive a value - _key_ argument is required
-   * `role:cache, cmd:add` store a value, only if the key does not exist - _key_ and _val_ arguments required
-   * `role:cache, cmd:delete` delete a value - _key_ argument is required, no error if key does not exist
-   * `role:cache, cmd:incr` increment a value - _key_ and _val_ (integer) arguments required
-   * `role:cache, cmd:decr` decrement a value - _key_ and _val_ (integer) arguments required
-
-All caching plugins, including this one, implement this action API.
-
-### Extended API
-
-To access the underlying [redis](https://github.com/NodeRedis/node_redis), use the action `plugin: 'redis-cache', cmd: 'native'`.
-
-The plugin also registers with the action `role: 'seneca', cmd: 'close'`. This sends the `QUIT` command to the redis connection when you call the `seneca.close` method.
+Details: [Messages](docs/reference/messages.md) and [Errors](docs/reference/errors.md).
 
 ## Contributing
 
-The [Senecajs org][] encourage open participation. If you feel you can help in any way, be it with
-documentation, examples, extra testing, or new features please get in touch.
+The [Senecajs org](https://github.com/senecajs/) encourages open participation.
 
-### Running tests
+To run the tests (Node 24 or 22, with the `seneca@4.0.0-rc5` devDependency):
 
 ```
-npm run test
+npm install
+npm run services:up
+npm test
+npm run services:down
 ```
+
+See [Run the tests locally](docs/how-to/run-the-tests-locally.md) for the
+environment variables. CI workflow changes are in `.patches/`; apply them with
+`git am .patches/*.patch`.
+
 ## Background
 
-Uses [ioredis](https://github.com/luin/ioredis) as the Redis client.
+Originally written by Seamus D'Arcy and Richard Rodger. See
+[CHANGES.md](CHANGES.md) for history.
 
-[MIT]: ./LICENSE
-[Senecajs org]: https://github.com/senecajs/
-[Seneca.js]: https://www.npmjs.com/package/seneca
+| Plugin | Seneca | Node | redis client |
+| ------ | ------ | ---- | ------------ |
+| 2.1.x | 3.x, 4.0.0-rc5 and later | 22, 24 | `redis` 3 |
+| 2.0.x | 3.x | older | `redis` 3 |
+
+Licensed under [MIT](LICENSE).

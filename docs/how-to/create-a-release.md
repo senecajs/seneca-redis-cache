@@ -5,8 +5,8 @@
 3.  Pull down the repository locally on the master branch.
 4.  Ensure there are no outstanding commits and the branch is clean.
 5.  Run `npm install` and ensure all dependencies correctly install.
-6.  Run a [Redis][] instance by installing Redis and running "redis-server" in the terminal.
-7.  Run `npm run test` and ensure testing and linting passes.
+6.  Start redis with `npm run services:up` (see [Run the tests locally](run-the-tests-locally.md)).
+7.  Run `npm run test` and ensure the tests pass, then `npm run services:down`.
 8.  Run `npm version vx.x.x -m "version x.x.x"` where `x.x.x` is the version.
 9.  Run `git push upstream master --tags`
 10.  Run `npm publish`
@@ -16,4 +16,3 @@
 14. Notify core maintainers of the release via email.
 
 [Releases]: https://github.com/senecajs/seneca-redis-cache/releases
-[Redis]: http://redis.io/
