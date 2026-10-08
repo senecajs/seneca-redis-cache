@@ -1,0 +1,72 @@
+From ec34930fc3dcb5a939abf35d50c989149ac0b850 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 8 Oct 2026 11:37:47 +0000
+Subject: [PATCH] Run CI on Linux with a redis service container
+
+Trigger on master (the default branch) as well as main, drop the
+Windows and macOS runners (service containers need Linux), and start
+redis 8.10 as a service container on host port 16381 with a
+redis-cli health check, matching docker-compose.yml.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01LaHppcejXbSsAH4BZXNsjV
+---
+ .github/workflows/build.yml | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+index a030080..58468e6 100644
+--- a/.github/workflows/build.yml
++++ b/.github/workflows/build.yml
+@@ -2,21 +2,35 @@ name: build
+ 
+ on:
+   push:
+-    branches: [main]
++    branches: [master, main]
+   pull_request:
+-    branches: [main]
++    branches: [master, main]
+ 
+ jobs:
+   build:
+-    timeout-minutes: 6
++    timeout-minutes: 10
+ 
+     strategy:
+       fail-fast: false
+       matrix:
+-        os: [ubuntu-latest, windows-latest, macos-latest]
+         node-version: [24.x, 22.x]
+ 
+-    runs-on: ${{ matrix.os }}
++    runs-on: ubuntu-latest
++
++    services:
++      redis:
++        image: redis:8.10-alpine
++        ports:
++          - 16381:6379
++        options: >-
++          --health-cmd "redis-cli ping"
++          --health-interval 5s
++          --health-timeout 5s
++          --health-retries 20
++
++    env:
++      SENECA_TEST_REDIS_HOST: 127.0.0.1
++      SENECA_TEST_REDIS_PORT: 16381
+ 
+     steps:
+       - uses: actions/checkout@v4
+@@ -24,6 +38,7 @@ jobs:
+         uses: actions/setup-node@v4
+         with:
+           node-version: ${{ matrix.node-version }}
++          cache: npm
+       - run: npm install
+       - run: npm run build --if-present
+       - run: npm test
+-- 
+2.43.0
+

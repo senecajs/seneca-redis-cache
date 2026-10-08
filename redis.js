@@ -1,4 +1,4 @@
-/* Copyright (c) 2014-2019 Richard Rodger, Seamus D'Arcy, and other contributors, MIT License. */
+/* Copyright (c) 2014-2026 Richard Rodger, Seamus D'Arcy, and other contributors, MIT License. */
 'use strict'
 
 var Redis = require('redis')
@@ -143,7 +143,11 @@ function redis_cache(options) {
     done(null, cache)
   })
 
-  seneca.add({ role: 'seneca', cmd: 'close' }, function (msg, reply) {
+  // Seneca 3 closes via role:seneca,cmd:close; Seneca 4 via sys:seneca,cmd:close.
+  var close_pattern = seneca.version.startsWith('3.')
+    ? 'role:seneca,cmd:close'
+    : 'sys:seneca,cmd:close'
+  seneca.add(close_pattern, function (msg, reply) {
     var closer = this
     cache.quit(function (err) {
       closer.log.error('close-error', err)

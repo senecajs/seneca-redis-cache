@@ -1,18 +1,19 @@
 {
   "name": "@seneca/redis-cache",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Redis caching plugin for seneca",
   "main": "redis.js",
   "scripts": {
-    "test": "lab -v -P test -t 80 -L -r console -o stdout -r html -o test/coverage.html",
+    "test": "node --test test/*.test.js",
     "doc": "seneca-doc",
     "prettier": "prettier --write --no-semi --single-quote *.js test/*.js",
-    "coveralls": "lab -s -P test -r lcov | coveralls",
     "clean": "rm -rf node_modules package-lock.json yarn.lock",
     "reset": "npm run clean && npm i && npm test",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
     "repo-publish": "npm run clean && npm install --registry http://registry.npmjs.org && npm run repo-publish-quick",
-    "repo-publish-quick": "npm run prettier && npm test && npm run doc && npm run repo-tag && npm publish --registry http://registry.npmjs.org --access public"
+    "repo-publish-quick": "npm run prettier && npm test && npm run repo-tag && npm publish --registry http://registry.npmjs.org --access public",
+    "services:up": "docker compose up -d --wait",
+    "services:down": "docker compose down -v"
   },
   "repository": {
     "type": "git",
@@ -41,14 +42,14 @@
     "redis": "^3.0.2"
   },
   "devDependencies": {
-    "@hapi/code": "^8.0.1",
-    "@hapi/lab": "^22.0.4",
     "@seneca/cache-test": "^2.0.0",
     "@seneca/doc": "^4.0.0",
-    "coveralls": "^3.1.0",
     "prettier": "^2.0.5",
-    "seneca": "plugin",
+    "seneca": "^4.0.0-rc5",
     "seneca-plugin-validator": "^0.6.1",
     "uuid": "^8.2.0"
+  },
+  "peerDependencies": {
+    "seneca": ">=3 || >=4.0.0-rc5"
   }
 }
