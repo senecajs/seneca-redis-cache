@@ -1,0 +1,13 @@
+name: seneca-redis-cache
+
+services:
+  redis:
+    image: redis:8.10-alpine
+    container_name: seneca-redis-cache-redis
+    ports:
+      - '16381:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
