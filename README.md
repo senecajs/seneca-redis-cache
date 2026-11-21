@@ -3,7 +3,7 @@
 
 # @seneca/redis-cache
 
-A [Seneca](https://senecajs.org) plugin that implements the Seneca cache API (`role:cache`) on a [redis](https://redis.io) server, using the `redis` v3 Node.js client. Works with Seneca 3 and the Seneca 4 prerelease (`4.0.0-rc5`) on Node 22 and 24.
+A [Seneca](https://senecajs.org) plugin that implements the Seneca cache API (`role:cache`) on a [redis](https://redis.io) server, using the `redis` v3 Node.js client. Version 3 needs Seneca 4 and Node.js 24 or later. Seneca 3 users stay on `@seneca/redis-cache@2`.
 
 [![npm version](https://img.shields.io/npm/v/@seneca/redis-cache.svg)](https://npmjs.com/package/@seneca/redis-cache)
 [![build](https://github.com/senecajs/seneca-redis-cache/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-redis-cache/actions/workflows/build.yml)
@@ -16,7 +16,7 @@ A [Seneca](https://senecajs.org) plugin that implements the Seneca cache API (`r
 ## Install
 
 ```
-npm install seneca @seneca/redis-cache
+npm install seneca@^4 @seneca/redis-cache
 ```
 
 You also need a redis server (default `127.0.0.1:6379`).
@@ -84,7 +84,7 @@ Details: [Messages](docs/reference/messages.md) and [Errors](docs/reference/erro
 
 The [Senecajs org](https://github.com/senecajs/) encourages open participation.
 
-To run the tests (Node 24 or 22, with the `seneca@4.0.0-rc5` devDependency):
+To run the tests (Node.js 24 or later):
 
 ```
 npm install
@@ -104,7 +104,7 @@ Originally written by Seamus D'Arcy and Richard Rodger. See
 
 | Plugin | Seneca | Node | redis client |
 | ------ | ------ | ---- | ------------ |
-| 2.1.x | 3.x, 4.0.0-rc5 and later | 22, 24 | `redis` 3 |
+| 3.x | 4 | 24 and later | `redis` 3 |
 | 2.0.x | 3.x | older | `redis` 3 |
 
 Licensed under [MIT](LICENSE).

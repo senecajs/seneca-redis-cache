@@ -19,3 +19,8 @@ Applied with `SET key value EX <expire>`. Expiry is not refreshed by `cmd:get`.
 Any [client option of `redis` v3](https://github.com/redis/node-redis/tree/v3.1.2#options-object-properties)
 (for example `password`, `db`, `tls`) may be added. If you pass `redis`
 without `port` or `host`, the defaults above fill them in.
+
+Seneca 4 checks the options against the defaults: `expire` and `redis.port`
+must be numbers and `redis.host` a string, otherwise the plugin fails to load
+with `invalid_plugin_option`. Convert a port read from an environment
+variable with `parseInt`.

@@ -2,7 +2,7 @@
 
 Goal: run the test suite against a real redis server started by Docker.
 
-1. Use Node 24 (22 also works) and install dependencies:
+1. Use Node 24 or later and install dependencies:
 
    ```
    npm install
