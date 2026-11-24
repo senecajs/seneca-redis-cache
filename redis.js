@@ -4,13 +4,15 @@
 var Redis = require('redis')
 
 module.exports = redis_cache
-module.exports.defaults = {
+module.exports.defaults = ({ valid }) => ({
   expire: 60 * 60, // 1 hour
-  redis: {
+
+  // Passed to the redis client as it is: any redis v3 client option is accepted.
+  redis: valid.Open({
     port: 6379,
     host: '127.0.0.1',
-  },
-}
+  }),
+})
 module.exports.errors = {
   key_exists: 'Key <%=key%> exists.',
   not_json: 'Value for key <%=key%> is cannot be parsed as JSON: <%=val%>.',
@@ -20,16 +22,6 @@ module.exports.errors = {
 
 function redis_cache(options) {
   var seneca = this
-
-  options = seneca.util.deepextend(
-    {
-      redis: {
-        port: 6379,
-        host: '127.0.0.1',
-      },
-    },
-    options
-  )
 
   var cmds = {}
   var name = 'redis-cache'
@@ -143,14 +135,12 @@ function redis_cache(options) {
     done(null, cache)
   })
 
-  // Seneca 3 closes via role:seneca,cmd:close; Seneca 4 via sys:seneca,cmd:close.
-  var close_pattern = seneca.version.startsWith('3.')
-    ? 'role:seneca,cmd:close'
-    : 'sys:seneca,cmd:close'
-  seneca.add(close_pattern, function (msg, reply) {
+  seneca.add('sys:seneca,cmd:close', function (msg, reply) {
     var closer = this
     cache.quit(function (err) {
-      closer.log.error('close-error', err)
+      if (err) {
+        closer.log.error('close-error', err)
+      }
       closer.prior(msg, reply)
     })
   })

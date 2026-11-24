@@ -6,7 +6,7 @@ the cache actions against a real redis server.
 ## 1. Install
 
 ```
-npm install seneca @seneca/redis-cache
+npm install seneca@^4 @seneca/redis-cache
 ```
 
 You need a redis server. Inside this repository, `npm run services:up` starts
@@ -83,7 +83,7 @@ after delete { value: null }
 closed
 ```
 
-This output was produced with `seneca@4.0.0-rc5` and redis 8.10.
+This output was produced with Seneca 4 and redis 8.10.
 
 ## What happened
 

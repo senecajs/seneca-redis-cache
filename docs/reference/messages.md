@@ -68,5 +68,5 @@ with the first `error` (for example `ECONNREFUSED`), which makes Seneca fail.
 
 ## Close hook
 
-On Seneca 4 the plugin overrides `sys:seneca,cmd:close`; on Seneca 3,
-`role:seneca,cmd:close`. It sends `QUIT` and then calls the prior close action.
+The plugin overrides `sys:seneca,cmd:close`. It sends `QUIT` and then calls
+the prior close action. An error from `QUIT` is logged as `close-error`.

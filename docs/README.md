@@ -48,7 +48,7 @@ The documentation follows the [Diátaxis](https://diataxis.fr) structure.
 | `role:cache,cmd:clear` | action | [Messages](reference/messages.md#rolecachecmdclear) |
 | `role:cache,get:native` | action | [Messages](reference/messages.md#rolecachegetnative) |
 | `init:redis-cache` | action | [Messages](reference/messages.md#initredis-cache) |
-| `sys:seneca,cmd:close` / `role:seneca,cmd:close` | action (close hook) | [Messages](reference/messages.md#close-hook) |
+| `sys:seneca,cmd:close` | action (close hook) | [Messages](reference/messages.md#close-hook) |
 | `key_exists` | error | [Errors](reference/errors.md) |
 | `not_json` | error | [Errors](reference/errors.md) |
 | `op_failed_nan` | error | [Errors](reference/errors.md) |

@@ -152,9 +152,60 @@ describe('cache', function () {
   it('close', async () => {
     const seneca = Seneca().test().quiet().use(Plugin, { redis })
 
-    // Callback form: `await seneca.ready()` can hang on 4.0.0-rc5.
-    await new Promise((resolve) => seneca.ready(resolve))
+    await seneca.ready()
     await seneca.close()
+  })
+})
+
+describe('options', function () {
+  // The redis option is passed to the redis client as it is, so client
+  // options that the plugin defaults do not name, such as db, are accepted.
+  node_it('redis-passthrough', async () => {
+    const si1 = Seneca({ legacy: false })
+      .test()
+      .quiet()
+      .use(Plugin, { redis: { ...redis, db: 1 } })
+    const si0 = Seneca({ legacy: false })
+      .test()
+      .quiet()
+      .use(Plugin, { redis: { port: redis.port, host: redis.host } })
+
+    try {
+      await si1.ready()
+      await si0.ready()
+
+      const client1 = await si1.post('role:cache,get:native')
+      assert.strictEqual(client1.selected_db, 1)
+
+      const key = Uuid.v4()
+      await si1.post('role:cache,cmd:set', { key, val: 'in-db-1' })
+
+      const out1 = await si1.post('role:cache,cmd:get', { key })
+      assert.strictEqual(out1.value, 'in-db-1')
+
+      // The key was written to database 1, not to the default database 0.
+      const out0 = await si0.post('role:cache,cmd:get', { key })
+      assert.strictEqual(out0.value, null)
+
+      await si1.post('role:cache,cmd:delete', { key })
+    } finally {
+      await si1.close()
+      await si0.close()
+    }
+  })
+
+  node_it('redis-defaults', async () => {
+    const si = Seneca({ legacy: false })
+      .test()
+      .quiet()
+      .use(Plugin, { redis: { port: redis.port } })
+    try {
+      await si.ready()
+      const client = await si.post('role:cache,get:native')
+      assert.strictEqual(client.address, '127.0.0.1:' + redis.port)
+    } finally {
+      await si.close()
+    }
   })
 })
 

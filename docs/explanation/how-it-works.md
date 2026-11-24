@@ -9,14 +9,16 @@ the close message on.
 
 ## Seneca 3 versus 4
 
-Seneca 4 closes an instance through `sys:seneca,cmd:close`. In 4.0.0-rc5 a
-hook on the Seneca 3 pattern `role:seneca,cmd:close` is never called, so the
-redis connection stayed open and kept the process alive. The plugin therefore
-checks `seneca.version` and registers on the pattern the running Seneca uses.
+Version 3 of the plugin supports Seneca 4 only; Seneca 3 users stay on
+version 2. Seneca 4 closes an instance through `sys:seneca,cmd:close`, and the
+plugin registers its close hook on that pattern.
 
 Other Seneca 4 differences seen by users: errors such as `key_exists` arrive
 unwrapped (use `err.code` and `err.message`), and plugin options come only
-from `use()` and `plugin.redis_cache`.
+from `use()` and `plugin.redis_cache`. Seneca 4 also checks plugin options
+against the defaults. The `redis` option is declared open, so any client
+option is accepted, but `expire`, `redis.port` and `redis.host` must have the
+types of their defaults (number, number, string).
 
 ## Values and expiry
 
